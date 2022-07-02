@@ -108,6 +108,13 @@ if brew list | grep -Fq brew-cask; then
   brew uninstall --force brew-cask
 fi
 
+if ! command -v nvm >/dev/null; then
+  fancy_echo "Installing nvm ..."
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+  export NVM_DIR="$HOME/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+fi
+
 fancy_echo "Please review and customize this script before running so that it meets your needs!"
 fancy_echo "Updating Homebrew formulae ..."
 brew update --force # https://github.com/Homebrew/brew/issues/1151
@@ -126,7 +133,6 @@ brew "zsh"
 brew "libyaml" # should come after openssl
 cask "gpg-suite"
 brew "rbenv"
-brew "nvm"
 brew "pyenv"
 brew "pipenv"
 brew "tfenv"
