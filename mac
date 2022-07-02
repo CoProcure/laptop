@@ -115,7 +115,6 @@ brew bundle --file=- <<EOF
 tap "homebrew/services"
 
 # Unix
-brew "git"
 brew "htop"
 brew "openssl"
 brew "the_silver_searcher"
