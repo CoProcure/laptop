@@ -160,8 +160,7 @@ fancy_echo "Installing ohmyzsh framework for zsh ..."
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # fancy_echo "Installing NodeJS versions..."
-nvm install 10
-nvm install 12
+nvm install 16
 
 if [ -f "$HOME/.laptop.local" ]; then
   fancy_echo "Running your customizations from ~/.laptop.local ..."
