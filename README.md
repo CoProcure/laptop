@@ -47,6 +47,12 @@ Optionally, review the log:
 less ~/laptop.log
 ```
 
+The script modifies your terminal configuration (e.g. to add NVM to $PATH). If you want to pick up those changes without opening a new terminal, source your config file like so (substituting .bashrc if you're using bash).
+
+```sh
+source ~/.zshrc
+```
+
 Debugging
 ---------
 
