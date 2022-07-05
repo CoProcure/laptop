@@ -21,6 +21,8 @@ Older versions may work but haven't been tested recently.
 Install
 -------
 
+Make sure you have git installed. On macOS, just typing `git` in the terminal should prompt you to install the Command Line Tools, but if not, `xcode-select --install` should do the trick.
+
 Download the script:
 
 ```sh
