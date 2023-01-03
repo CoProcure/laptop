@@ -92,9 +92,9 @@ gem_install_or_update() {
 
 if ! command -v brew >/dev/null; then
   fancy_echo "Installing Homebrew ..."
-    curl -fsS \
-      'https://raw.githubusercontent.com/Homebrew/install/master/install' | ruby
-
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    # Add brew to the path
+    append_to_zshrc 'eval "$(/opt/homebrew/bin/brew shellenv)"'
     append_to_zshrc '# recommended by brew doctor'
 
     # shellcheck disable=SC2016
