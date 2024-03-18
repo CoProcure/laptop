@@ -167,4 +167,4 @@ if [ -f "$HOME/.laptop.local" ]; then
 fi
 
 fancy_echo "Don't forget to scroll up through the install logs above to see if any packages have setup/config instructions!"
-fancy_echo "Also, you may enjoy some of the modificiations in the `zshrc-additions` file in this repo."
+fancy_echo "Also, you may enjoy some of the modifications in the `zshrc-additions` file in this repo."
