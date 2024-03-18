@@ -13,10 +13,12 @@ Requirements
 
 We support:
 
-* macOS Mojave (10.14)
-* macOS Catalina (10.15)
+* macOS Sonoma (14.x) on Apple Silicon and Intel
+* macOS Ventura (13.x) on Apple Silicon and Intel
+* macOS Monterey (12.x) on Apple Silicon and Intel
 
-Older versions may work but haven't been tested recently.
+Older versions may work but aren't regularly tested.
+Bug reports for older versions are welcome.
 
 Install
 -------
@@ -26,7 +28,7 @@ Make sure you have git installed. On macOS, just typing `git` in the terminal sh
 Download the script:
 
 ```sh
-curl --remote-name https://raw.githubusercontent.com/CoProcure/laptop/master/mac
+curl --remote-name https://raw.githubusercontent.com/CoProcure/laptop/main/mac
 ```
 
 Review the script (avoid running scripts you haven't read!):
@@ -73,47 +75,40 @@ macOS tools:
 
 Unix tools:
 
-* [Git] for version control
 * [htop] for viewing process information in the CLI
 * [OpenSSL] for Transport Layer Security (TLS)
 * [The Silver Searcher] for finding things in files
-* [vim] as a handy in-terminal editor for rainy days
+* [tmux] for saving project state and switching between projects
 * [Zsh] as your shell
 * [Oh My Zsh] framework for Zsh
 
-[Git]: https://git-scm.com/
-[htop]: https://hisham.hm/htop/
+[htop]: https://htop.dev/
 [OpenSSL]: https://www.openssl.org/
 [The Silver Searcher]: https://github.com/ggreer/the_silver_searcher
-[vim]: https://www.vim.org/
+[tmux]: http://tmux.github.io/
 [Zsh]: http://www.zsh.org/
+[Oh My Zsh]: https://ohmyz.sh/
 
 Development tools:
 
 * [AWS CLI] for interacting with the Amazon API
-* [Heroku CLI] for interacting with the Heroku API
 * [Sentry CLI] for interacting with the Sentry API
 
 [AWS CLI]: https://aws.amazon.com/cli/
-[Heroku CLI]: https://devcenter.heroku.com/articles/heroku-cli
 [Sentry CLI]: https://github.com/getsentry/sentry-cli
-[Oh My Zsh]: https://ohmyz.sh/
 
 Programming languages, package managers, and configuration:
 
-* [Node.js] and [npm], for running apps and installing JavaScript packages. This installer uses `nvm` to manage Node versions.
-* [Ruby] stable for writing general-purpose code. This installer uses `rbenv` to manage Ruby versions.
-* [rbenv] for managing your Ruby environment
-* [Node.js] and [npm], for running apps and installing JavaScript packages
-* [nvm] for managing versions of node.js
-* [Ruby] stable for writing general-purpose code
+* [Node.js] and [npm], for running apps and installing JavaScript packages. This installer uses [nvm] to manage Node versions.
+* [Ruby] stable for writing general-purpose code. This installer uses [rbenv] to manage Ruby versions.
+* [Rosetta 2] for running tools that are not supported in Apple silicon processors
 
 [Node.js]: http://nodejs.org/
 [npm]: https://www.npmjs.org/
 [nvm]: https://github.com/nvm-sh/nvm
 [Ruby]: https://www.ruby-lang.org/en/
 [rbenv]: https://github.com/rbenv/rbenv
-
+[Rosetta 2]: https://developer.apple.com/documentation/apple-silicon/about-the-rosetta-translation-environment
 
 Databases:
 
@@ -123,10 +118,9 @@ Databases:
 [Postgres]: http://www.postgresql.org/
 [Redis]: http://redis.io/
 
-Applications:
+Applications (optional, commented out by default):
 
 * [Google Chrome] as a browser option, and for testing
-* [Firefox] as a browser option, and for testing
 * [Slack] for team communication
 * [iTerm2] for an improved terminal experience
 * [Sublime Text] as a text editor option
@@ -136,12 +130,9 @@ Applications:
 * [Flycut] to expand the depth/history of your clipboard
 * [BitWarden] to store passwords/secrets and share them with teammates
 * [Caffeine] to keep your computer from falling asleep when you don't want it to
-* [Docker] for managing portable VMs
-* [Zoom] for videoconferencing
 * [TablePlus] for connecting to local and remote relational DBs
 
 [Google Chrome]: https://www.google.com/chrome/
-[Firefox]: https://www.mozilla.org/en-US/firefox/new/
 [Slack]: https://slack.com/
 [iTerm2]: https://www.iterm2.com/
 [Sublime Text]: https://www.sublimetext.com/
@@ -151,9 +142,9 @@ Applications:
 [Flycut]: https://github.com/TermiT/flycut
 [BitWarden]: https://bitwarden.com/
 [Caffeine]: http://lightheadsw.com/caffeine/
-[Docker]: https://www.docker.com/
-[Zoom]: https://zoom.us/
 [TablePlus]: https://tableplus.com/
+
+It should take less than 15 minutes to install (depends on your machine).
 
 Customize in `~/.laptop.local`
 ------------------------------
@@ -222,7 +213,7 @@ brew install shellcheck
 Fork Information
 ----------------
 
-This repo is a fork of one originally put together by Thoughtbot, and has been customized to meet some of the needs of CoProcure engineers while retaining some opinionation about handy tools and common configurations.
+This repo is a fork of one originally put together by Thoughtbot, and has been customized to meet some of the needs of Pavilion engineers while retaining some opinionation about handy tools and common configurations.
 
 The original Thoughtbot project has some features that have been excluded in this fork, and that project may also continue to recieve updates that are of interest to some developers. For more info, visit the original Thoughtbot repo at https://github.com/thoughtbot/laptop
 
@@ -230,23 +221,25 @@ The original Thoughtbot project has some features that have been excluded in thi
 License
 -------
 
-Laptop is © 2011-2020 thoughtbot, inc.
+Laptop is © 2011 thoughtbot, inc.
 It is free software,
 and may be redistributed under the terms specified in the [LICENSE] file.
 
 [LICENSE]: LICENSE
 
-About thoughtbot
-----------------
+<!-- START /templates/footer.md -->
+## About thoughtbot
 
-![thoughtbot](https://thoughtbot.com/brand_assets/93:44.svg)
+![thoughtbot](https://thoughtbot.com/thoughtbot-logo-for-readmes.svg)
 
-Laptop is maintained and funded by thoughtbot, inc.
+This repo is maintained and funded by thoughtbot, inc.
 The names and logos for thoughtbot are trademarks of thoughtbot, inc.
 
-We are passionate about open source software.
+We love open source software!
 See [our other projects][community].
 We are [available for hire][hire].
 
 [community]: https://thoughtbot.com/community?utm_source=github
-[hire]: https://thoughtbot.com?utm_source=github
+[hire]: https://thoughtbot.com/hire-us?utm_source=github
+
+<!-- END /templates/footer.md -->

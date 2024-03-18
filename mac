@@ -1,9 +1,11 @@
 #!/bin/sh
 
-# Welcome to the CoProcure laptop script!
+# Welcome to the Pavilion laptop script!
 # Please take a moment to read *and customize* this script before running.
 # The packages below are helpful suggestions, not a prescriptive list.
 # In particular, you may want to add your favorite code editor.
+
+# shellcheck disable=SC3043
 
 fancy_echo() {
   local fmt="$1"; shift
@@ -47,16 +49,12 @@ fi
 # shellcheck disable=SC2016
 append_to_zshrc 'export PATH="$HOME/.bin:$PATH"'
 
-HOMEBREW_PREFIX="/usr/local"
-
-if [ -d "$HOMEBREW_PREFIX" ]; then
-  if ! [ -r "$HOMEBREW_PREFIX" ]; then
-    sudo chown -R "$LOGNAME:admin" /usr/local
-  fi
+# Determine Homebrew prefix
+arch="$(uname -m)"
+if [ "$arch" = "arm64" ]; then
+  HOMEBREW_PREFIX="/opt/homebrew"
 else
-  sudo mkdir "$HOMEBREW_PREFIX"
-  sudo chflags norestricted "$HOMEBREW_PREFIX"
-  sudo chown -R "$LOGNAME:admin" "$HOMEBREW_PREFIX"
+  HOMEBREW_PREFIX="/usr/local"
 fi
 
 update_shell() {
@@ -73,7 +71,7 @@ update_shell() {
 
 case "$SHELL" in
   */zsh)
-    if [ "$(command -v zsh)" != '/usr/local/bin/zsh' ] ; then
+    if [ "$(command -v zsh)" != "$HOMEBREW_PREFIX/bin/zsh" ] ; then
       update_shell
     fi
     ;;
@@ -81,6 +79,20 @@ case "$SHELL" in
     update_shell
     ;;
 esac
+
+# checks architecture
+if [ "$(uname -m)" = "arm64" ]
+  then
+  # checks if Rosetta is already installed
+  if ! pkgutil --pkg-info=com.apple.pkg.RosettaUpdateAuto > /dev/null 2>&1
+  then
+    echo "Installing Rosetta"
+    # Installs Rosetta2
+    softwareupdate --install-rosetta --agree-to-license
+  else
+    echo "Rosetta is installed"
+  fi
+fi
 
 gem_install_or_update() {
   if gem list "$1" --installed > /dev/null; then
@@ -92,15 +104,12 @@ gem_install_or_update() {
 
 if ! command -v brew >/dev/null; then
   fancy_echo "Installing Homebrew ..."
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    # Add brew to the path
-    append_to_zshrc 'eval "$(/opt/homebrew/bin/brew shellenv)"'
-    append_to_zshrc '# recommended by brew doctor'
+    /bin/bash -c \
+      "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-    # shellcheck disable=SC2016
-    append_to_zshrc 'export PATH="/usr/local/bin:$PATH"' 1
+    append_to_zshrc "eval \"\$($HOMEBREW_PREFIX/bin/brew shellenv)\""
 
-    export PATH="/usr/local/bin:$PATH"
+    export PATH="$HOMEBREW_PREFIX/bin:$PATH"
 fi
 
 if brew list | grep -Fq brew-cask; then
@@ -110,7 +119,7 @@ fi
 
 if ! command -v nvm >/dev/null; then
   fancy_echo "Installing nvm ..."
-  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
   export NVM_DIR="$HOME/.nvm"
   [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 fi
@@ -125,7 +134,7 @@ tap "homebrew/services"
 brew "htop"
 brew "openssl"
 brew "the_silver_searcher"
-brew "vim"
+brew "tmux"
 brew "zsh"
 
 # Programming language prerequisites and package managers
@@ -137,36 +146,32 @@ brew "pipenv"
 brew "tfenv"
 
 # Databases
-brew "postgres", restart_service: :changed
+brew "postgresql@14", restart_service: :changed
 brew "redis", restart_service: :changed
 
 # Development tools
 brew "awscli"
-brew "heroku/brew/heroku"
 brew "getsentry/tools/sentry-cli"
 
-# Applications
-cask "google-chrome"
-cask "firefox"
-cask "slack"
-cask "iterm2"
-cask "sublime-text"
-cask "sublime-merge"
-cask "visual-studio-code"
-cask "insomnia"
-cask "flycut"
-cask "bitwarden"
-cask "caffeine"
-cask "docker"
-cask "zoom"
-cask "tableplus"
+# Applications (uncomment back in to install)
+# cask "google-chrome"
+# cask "slack"
+# cask "iterm2"
+# cask "sublime-text"
+# cask "sublime-merge"
+# cask "visual-studio-code"
+# cask "insomnia"
+# cask "flycut"
+# cask "bitwarden"
+# cask "caffeine"
+# cask "tableplus"
 EOF
 
 fancy_echo "Installing ohmyzsh framework for zsh ..."
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # fancy_echo "Installing NodeJS versions..."
-nvm install 16
+nvm install 20
 
 if [ -f "$HOME/.laptop.local" ]; then
   fancy_echo "Running your customizations from ~/.laptop.local ..."
@@ -175,4 +180,4 @@ if [ -f "$HOME/.laptop.local" ]; then
 fi
 
 fancy_echo "Don't forget to scroll up through the install logs above to see if any packages have setup/config instructions!"
-fancy_echo "Also, you may enjoy some of the modificiations in the `zshrc-additions` file in this repo."
+fancy_echo "Also, you may enjoy some of the modifications in the `zshrc-additions` file in this repo."
