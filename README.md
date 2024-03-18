@@ -118,6 +118,32 @@ Databases:
 [Postgres]: http://www.postgresql.org/
 [Redis]: http://redis.io/
 
+Applications (optional, commented out by default):
+
+* [Google Chrome] as a browser option, and for testing
+* [Slack] for team communication
+* [iTerm2] for an improved terminal experience
+* [Sublime Text] as a text editor option
+* [Sublime Merge] as a merge/diff tool and as a companion to Sublime Text
+* [Visual Studio Code] as a text editor option
+* [Insomnia] for a convenient UI to experiment with API endpoints
+* [Flycut] to expand the depth/history of your clipboard
+* [BitWarden] to store passwords/secrets and share them with teammates
+* [Caffeine] to keep your computer from falling asleep when you don't want it to
+* [TablePlus] for connecting to local and remote relational DBs
+
+[Google Chrome]: https://www.google.com/chrome/
+[Slack]: https://slack.com/
+[iTerm2]: https://www.iterm2.com/
+[Sublime Text]: https://www.sublimetext.com/
+[Sublime Merge]: https://www.sublimemerge.com/
+[Visual Studio Code]: https://code.visualstudio.com/
+[Insomnia]: https://insomnia.rest/
+[Flycut]: https://github.com/TermiT/flycut
+[BitWarden]: https://bitwarden.com/
+[Caffeine]: http://lightheadsw.com/caffeine/
+[TablePlus]: https://tableplus.com/
+
 It should take less than 15 minutes to install (depends on your machine).
 
 Customize in `~/.laptop.local`

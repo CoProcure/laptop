@@ -152,6 +152,19 @@ brew "redis", restart_service: :changed
 # Development tools
 brew "awscli"
 brew "getsentry/tools/sentry-cli"
+
+# Applications (uncomment back in to install)
+# cask "google-chrome"
+# cask "slack"
+# cask "iterm2"
+# cask "sublime-text"
+# cask "sublime-merge"
+# cask "visual-studio-code"
+# cask "insomnia"
+# cask "flycut"
+# cask "bitwarden"
+# cask "caffeine"
+# cask "tableplus"
 EOF
 
 fancy_echo "Installing ohmyzsh framework for zsh ..."
