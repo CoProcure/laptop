@@ -152,6 +152,7 @@ brew "redis", restart_service: :changed
 # Development tools
 brew "awscli"
 brew "getsentry/tools/sentry-cli"
+EOF
 
 fancy_echo "Installing ohmyzsh framework for zsh ..."
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
