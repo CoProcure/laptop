@@ -141,8 +141,7 @@ brew "zsh"
 brew "libyaml" # should come after openssl
 cask "gpg-suite"
 brew "rbenv"
-brew "pyenv"
-brew "pipenv"
+brew "uv"
 brew "tfenv"
 
 # Databases
