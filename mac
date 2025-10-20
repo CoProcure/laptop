@@ -48,6 +48,8 @@ fi
 
 # shellcheck disable=SC2016
 append_to_zshrc 'export PATH="$HOME/.bin:$PATH"'
+# Auto-use .env file.
+append_to_zshrc 'export UV_ENV_FILE=.env'
 
 # Determine Homebrew prefix
 arch="$(uname -m)"
