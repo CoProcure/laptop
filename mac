@@ -128,7 +128,6 @@ fancy_echo "Please review and customize this script before running so that it me
 fancy_echo "Updating Homebrew formulae ..."
 brew update --force # https://github.com/Homebrew/brew/issues/1151
 brew bundle --file=- <<EOF
-tap "homebrew/services"
 
 # Unix
 brew "htop"
