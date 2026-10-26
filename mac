@@ -42,6 +42,13 @@ if [ ! -d "$HOME/.bin/" ]; then
   mkdir "$HOME/.bin"
 fi
 
+# Oh My Zsh replaces ~/.zshrc with its template, so install it before anything
+# below appends to that file.
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+  fancy_echo "Installing ohmyzsh framework for zsh ..."
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+fi
+
 if [ ! -f "$HOME/.zshrc" ]; then
   touch "$HOME/.zshrc"
 fi
@@ -57,126 +64,83 @@ else
   HOMEBREW_PREFIX="/usr/local"
 fi
 
-update_shell() {
-  local shell_path;
-  shell_path="$(command -v zsh)"
-
+if [ "${SHELL##*/}" != "zsh" ]; then
   fancy_echo "Changing your shell to zsh ..."
-  if ! grep "$shell_path" /etc/shells > /dev/null 2>&1 ; then
-    fancy_echo "Adding '$shell_path' to /etc/shells"
-    sudo sh -c "echo $shell_path >> /etc/shells"
-  fi
-  sudo chsh -s "$shell_path" "$USER"
-}
-
-case "$SHELL" in
-  */zsh)
-    if [ "$(command -v zsh)" != "$HOMEBREW_PREFIX/bin/zsh" ] ; then
-      update_shell
-    fi
-    ;;
-  *)
-    update_shell
-    ;;
-esac
-
-# checks architecture
-if [ "$(uname -m)" = "arm64" ]
-  then
-  # checks if Rosetta is already installed
-  if ! pkgutil --pkg-info=com.apple.pkg.RosettaUpdateAuto > /dev/null 2>&1
-  then
-    echo "Installing Rosetta"
-    # Installs Rosetta2
-    softwareupdate --install-rosetta --agree-to-license
-  else
-    echo "Rosetta is installed"
-  fi
+  chsh -s /bin/zsh
 fi
 
-gem_install_or_update() {
-  if gem list "$1" --installed > /dev/null; then
-    gem update "$@"
-  else
-    gem install "$@"
-  fi
-}
-
-if ! command -v brew >/dev/null; then
+if [ ! -x "$HOMEBREW_PREFIX/bin/brew" ]; then
   fancy_echo "Installing Homebrew ..."
-    /bin/bash -c \
-      "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-    append_to_zshrc "eval \"\$($HOMEBREW_PREFIX/bin/brew shellenv)\""
-
-    export PATH="$HOMEBREW_PREFIX/bin:$PATH"
+  /bin/bash -c \
+    "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
-if brew list | grep -Fq brew-cask; then
-  fancy_echo "Uninstalling old Homebrew-Cask ..."
-  brew uninstall --force brew-cask
-fi
+append_to_zshrc "eval \"\$($HOMEBREW_PREFIX/bin/brew shellenv)\""
+eval "$("$HOMEBREW_PREFIX/bin/brew" shellenv)"
 
-if ! command -v nvm >/dev/null; then
+export NVM_DIR="$HOME/.nvm"
+if [ ! -s "$NVM_DIR/nvm.sh" ]; then
   fancy_echo "Installing nvm ..."
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-  export NVM_DIR="$HOME/.nvm"
-  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+fi
+# shellcheck disable=SC1091
+. "$NVM_DIR/nvm.sh"
+
+# Homebrew only ships the latest uv, but projects pin an exact uv version that
+# uv refuses to run under. The standalone install can be moved to any version
+# with `uv self update <version>`.
+if [ ! -x "$HOME/.local/bin/uv" ]; then
+  fancy_echo "Installing uv ..."
+  curl -LsSf https://astral.sh/uv/install.sh | sh
 fi
 
 fancy_echo "Please review and customize this script before running so that it meets your needs!"
 fancy_echo "Updating Homebrew formulae ..."
-brew update --force # https://github.com/Homebrew/brew/issues/1151
+brew update
 brew bundle --file=- <<EOF
-tap "homebrew/services"
-
 # Unix
+brew "gh"
 brew "htop"
-brew "openssl"
-brew "the_silver_searcher"
+brew "jq"
+brew "ripgrep"
 brew "tmux"
-brew "zsh"
 
-# Programming language prerequisites and package managers
-brew "libyaml" # should come after openssl
-cask "gpg-suite"
-brew "rbenv"
-brew "uv"
+# Programming languages and version managers
+brew "bun"
 brew "tfenv"
 
 # Databases
-brew "postgresql@14", restart_service: :changed
+brew "postgresql@17", restart_service: :changed
+brew "postgis"
 brew "redis", restart_service: :changed
 
 # Development tools
 brew "awscli"
-brew "getsentry/tools/sentry-cli"
 
 # Applications (uncomment back in to install)
+# cask "tailscale-app"
 # cask "google-chrome"
 # cask "slack"
 # cask "iterm2"
+# cask "visual-studio-code"
+# cask "cursor"
 # cask "sublime-text"
 # cask "sublime-merge"
-# cask "visual-studio-code"
+# cask "orbstack"
 # cask "insomnia"
-# cask "flycut"
 # cask "bitwarden"
-# cask "caffeine"
 # cask "tableplus"
 EOF
 
-fancy_echo "Installing ohmyzsh framework for zsh ..."
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
-# fancy_echo "Installing NodeJS versions..."
-nvm install 20
+fancy_echo "Installing Node.js ..."
+nvm install 24
+nvm alias default 24
 
 if [ -f "$HOME/.laptop.local" ]; then
   fancy_echo "Running your customizations from ~/.laptop.local ..."
-  # shellcheck disable=SC1090
+  # shellcheck disable=SC1091
   . "$HOME/.laptop.local"
 fi
 
 fancy_echo "Don't forget to scroll up through the install logs above to see if any packages have setup/config instructions!"
-fancy_echo "Also, you may enjoy some of the modifications in the `zshrc-additions` file in this repo."
+fancy_echo "Also, you may enjoy some of the modifications in the zshrc-additions file in this repo."
