@@ -13,9 +13,8 @@ Requirements
 
 We support:
 
-* macOS Sonoma (14.x) on Apple Silicon and Intel
-* macOS Ventura (13.x) on Apple Silicon and Intel
-* macOS Monterey (12.x) on Apple Silicon and Intel
+* macOS 26 (Tahoe) and later on Apple Silicon
+* macOS Sequoia (15.x) on Apple Silicon and Intel
 
 Older versions may work but aren't regularly tested.
 Bug reports for older versions are welcome.
@@ -24,6 +23,8 @@ Install
 -------
 
 Make sure you have git installed. On macOS, just typing `git` in the terminal should prompt you to install the Command Line Tools, but if not, `xcode-select --install` should do the trick.
+
+The script uses your existing Oh My Zsh install if you have one. If you don't, the Oh My Zsh installer replaces `~/.zshrc` with its template and saves your old file as `~/.zshrc.pre-oh-my-zsh`.
 
 Download the script:
 
@@ -49,7 +50,7 @@ Optionally, review the log:
 less ~/laptop.log
 ```
 
-The script modifies your terminal configuration (e.g. to add NVM to $PATH). If you want to pick up those changes without opening a new terminal, source your config file like so (substituting .bashrc if you're using bash).
+The script modifies your terminal configuration (e.g. to add Homebrew and nvm to $PATH). If you want to pick up those changes without opening a new terminal, source your config file like so (substituting .bashrc if you're using bash).
 
 ```sh
 source ~/.zshrc
@@ -61,7 +62,7 @@ Debugging
 Your last Laptop run will be saved to `~/laptop.log`.
 Read through it to see if you can debug the issue yourself.
 If not, copy the lines where the script failed into a
-[new GitHub Issue](https://github.com/thoughtbot/laptop/issues/new) for us.
+[new GitHub Issue](https://github.com/CoProcure/laptop/issues/new) for us.
 Or, attach the whole log file as an attachment.
 
 What it sets up
@@ -75,73 +76,74 @@ macOS tools:
 
 Unix tools:
 
+* [GitHub CLI] for working with pull requests from the terminal
 * [htop] for viewing process information in the CLI
-* [OpenSSL] for Transport Layer Security (TLS)
-* [The Silver Searcher] for finding things in files
+* [jq] for reading and transforming JSON
+* [ripgrep] for finding things in files
 * [tmux] for saving project state and switching between projects
-* [Zsh] as your shell
-* [Oh My Zsh] framework for Zsh
+* [Oh My Zsh] framework for Zsh, the default macOS shell
 
+[GitHub CLI]: https://cli.github.com/
 [htop]: https://htop.dev/
-[OpenSSL]: https://www.openssl.org/
-[The Silver Searcher]: https://github.com/ggreer/the_silver_searcher
-[tmux]: http://tmux.github.io/
-[Zsh]: http://www.zsh.org/
+[jq]: https://jqlang.org/
+[ripgrep]: https://github.com/BurntSushi/ripgrep
+[tmux]: https://github.com/tmux/tmux
 [Oh My Zsh]: https://ohmyz.sh/
 
 Development tools:
 
 * [AWS CLI] for interacting with the Amazon API
-* [Sentry CLI] for interacting with the Sentry API
 
 [AWS CLI]: https://aws.amazon.com/cli/
-[Sentry CLI]: https://github.com/getsentry/sentry-cli
 
 Programming languages, package managers, and configuration:
 
-* [Node.js] and [npm], for running apps and installing JavaScript packages. This installer uses [nvm] to manage Node versions.
-* [Ruby] stable for writing general-purpose code. This installer uses [rbenv] to manage Ruby versions.
-* [Rosetta 2] for running tools that are not supported in Apple silicon processors
+* [Node.js] 24, set as the default. This installer uses [nvm] to manage Node versions.
+* [Bun] for installing JavaScript packages and running scripts.
+* [uv] for managing Python versions and packages. It's installed with the standalone installer rather than Homebrew, because projects pin an exact uv version and Homebrew only ships the latest. Switch versions with `uv self update <version>`.
+* [tfenv] for managing [Terraform] versions in the infrastructure repo.
 
-[Node.js]: http://nodejs.org/
-[npm]: https://www.npmjs.org/
+[Node.js]: https://nodejs.org/
+[Bun]: https://bun.sh/
 [nvm]: https://github.com/nvm-sh/nvm
-[Ruby]: https://www.ruby-lang.org/en/
-[rbenv]: https://github.com/rbenv/rbenv
-[Rosetta 2]: https://developer.apple.com/documentation/apple-silicon/about-the-rosetta-translation-environment
+[tfenv]: https://github.com/tfutils/tfenv
+[Terraform]: https://www.terraform.io/
+[uv]: https://docs.astral.sh/uv/
 
 Databases:
 
-* [Postgres] for storing relational data
-* [Redis] for storing key-value data
+* [Postgres] 17 with [PostGIS] for storing relational data
+* [Redis] for storing key-value data and running the Celery queue
 
-[Postgres]: http://www.postgresql.org/
-[Redis]: http://redis.io/
+[Postgres]: https://www.postgresql.org/
+[PostGIS]: https://postgis.net/
+[Redis]: https://redis.io/
 
 Applications (optional, commented out by default):
 
+* [Tailscale] for the VPN used to reach the production and staging databases and Django Admin
 * [Google Chrome] as a browser option, and for testing
 * [Slack] for team communication
 * [iTerm2] for an improved terminal experience
+* [Visual Studio Code] or [Cursor] as a text editor option
 * [Sublime Text] as a text editor option
 * [Sublime Merge] as a merge/diff tool and as a companion to Sublime Text
-* [Visual Studio Code] as a text editor option
+* [OrbStack] for running Docker containers, such as the Vespa system tests
 * [Insomnia] for a convenient UI to experiment with API endpoints
-* [Flycut] to expand the depth/history of your clipboard
-* [BitWarden] to store passwords/secrets and share them with teammates
-* [Caffeine] to keep your computer from falling asleep when you don't want it to
+* [Bitwarden] to store passwords/secrets and share them with teammates
 * [TablePlus] for connecting to local and remote relational DBs
 
+[Tailscale]: https://tailscale.com/
 [Google Chrome]: https://www.google.com/chrome/
 [Slack]: https://slack.com/
-[iTerm2]: https://www.iterm2.com/
+[iTerm2]: https://iterm2.com/
+[Visual Studio Code]: https://code.visualstudio.com/
+[Cursor]: https://cursor.com/
 [Sublime Text]: https://www.sublimetext.com/
 [Sublime Merge]: https://www.sublimemerge.com/
-[Visual Studio Code]: https://code.visualstudio.com/
+[OrbStack]: https://orbstack.dev/
 [Insomnia]: https://insomnia.rest/
-[Flycut]: https://github.com/TermiT/flycut
-[BitWarden]: https://bitwarden.com/
-[Caffeine]: http://lightheadsw.com/caffeine/
+[Bitwarden]: https://bitwarden.com/
 [TablePlus]: https://tableplus.com/
 
 It should take less than 15 minutes to install (depends on your machine).
@@ -157,58 +159,34 @@ For example:
 #!/bin/sh
 
 brew bundle --file=- <<EOF
-brew "Caskroom/cask/dockertoolbox"
 brew "go"
 brew "ngrok"
-brew "watch"
+cask "rectangle"
 EOF
-
-default_docker_machine() {
-  docker-machine ls | grep -Fq "default"
-}
-
-if ! default_docker_machine; then
-  docker-machine create --driver virtualbox default
-fi
-
-default_docker_machine_running() {
-  default_docker_machine | grep -Fq "Running"
-}
-
-if ! default_docker_machine_running; then
-  docker-machine start default
-fi
 
 fancy_echo "Cleaning up old Homebrew formulae ..."
 brew cleanup
-brew cask cleanup
-
-if [ -r "$HOME/.rcrc" ]; then
-  fancy_echo "Updating dotfiles ..."
-  rcup
-fi
 ```
 
 Write your customizations such that they can be run safely more than once.
 See the `mac` script for examples.
 
-Laptop functions such as `fancy_echo` and
-`gem_install_or_update`
+Laptop functions such as `fancy_echo` and `append_to_zshrc`
 can be used in your `~/.laptop.local`.
-
-See the [wiki](https://github.com/thoughtbot/laptop/wiki)
-for more customization examples.
 
 Contributing
 ------------
 
 Edit the `mac` file.
 Document in the `README.md` file.
-Follow shell style guidelines by using [ShellCheck] and [Syntastic].
+Follow shell style guidelines by using [ShellCheck].
 
 ```sh
 brew install shellcheck
+shellcheck mac
 ```
+
+[ShellCheck]: https://www.shellcheck.net/
 
 Fork Information
 ----------------
